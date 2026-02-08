@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | EcoManure Market</title>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+    <style>
+        .admin-container {
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .warning {
+            color: #d32f2f;
+            background-color: #ffebee;
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 2rem;
+            border: 1px solid #ffcdd2;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="db.js"></script>
+    <script>
+        // Security Check
+        const currentUser = db.getCurrentUser();
+        if (!currentUser || currentUser.role !== 'admin') {
+            alert('Access Denied: Admins Only');
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="index.html">EcoManure Admin</a>
+            </div>
+            <nav class="main-nav">
+                <a href="index.html" class="btn-sm">Back to Shop</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="admin-container">
+            <h1>User Database (Admin View)</h1>
+            <div class="warning">
+                <strong>Warning:</strong> This page reveals user passwords. In a real application, passwords would be
+                hashed and unreadable. This is for demonstration purposes only.
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Balance</th>
+                        <th>Password</th>
+                    </tr>
+                </thead>
+                <tbody id="user-table-body">
+                    <!-- Users will be injected here -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="db.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const data = db.getData();
+            const tbody = document.getElementById('user-table-body');
+
+            if (data.users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">No users registered yet.</td></tr>';
+            } else {
+                data.users.forEach(user => {
+                    const status = db.getStatus(user.balance);
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.username}</td>
+                        <td><span class="badge badge-${user.role}">${user.role}</span></td>
+                        <td>${status}</td>
+                        <td>$${user.balance.toFixed(2)}</td>
+                        <td style="font-family: monospace;">${user.password}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

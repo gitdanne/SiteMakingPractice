@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | EcoManure Market</title>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 6rem auto;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .auth-container h1 {
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+        }
+
+        .auth-footer {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .auth-footer a {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .error-msg {
+            color: #d32f2f;
+            margin-bottom: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                <a href="index.html">EcoManure</a>
+            </div>
+            <nav class="main-nav">
+                <a href="index.html" class="btn-sm"><i class="fa-solid fa-arrow-left"></i> Back to Shop</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="auth-container">
+            <h1>Create Account</h1>
+            <div id="error-msg" class="error-msg"></div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="confirm-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+            </form>
+            <div class="auth-footer">
+                Already have an account? <a href="login.html">Login</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="db.js"></script>
+    <script>
+        document.getElementById('register-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm-password').value;
+            const errorEl = document.getElementById('error-msg');
+
+            // Password Validation
+            if (pass.length < 8) {
+                errorEl.textContent = "Password must be at least 8 characters long";
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (!/\d/.test(pass) || !/[a-zA-Z]/.test(pass)) {
+                errorEl.textContent = "Password must contain both letters and numbers";
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (pass !== confirm) {
+                errorEl.textContent = "Passwords do not match";
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            const result = db.createUser(user, pass);
+
+            if (result.success) {
+                // Auto-login logic
+                const loginResult = db.login(user, pass);
+                if (loginResult.success) {
+                    window.location.href = 'profile.html';
+                } else {
+                    // Fallback should rarely happen
+                    window.location.href = 'login.html';
+                }
+            } else {
+                errorEl.textContent = result.message;
+                errorEl.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>

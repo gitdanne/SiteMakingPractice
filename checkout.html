@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | EcoManure Market</title>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .checkout-page {
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 2rem;
+        }
+
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+        }
+
+        .form-section {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+
+        .form-section h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+        }
+
+        .order-summary {
+            background: #FAFAFA;
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            border: 1px solid #eee;
+            height: fit-content;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .summary-total {
+            border-top: 2px solid #ddd;
+            padding-top: 1rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 3000;
+            display: none;
+        }
+
+        .success-content i {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                <a href="index.html">EcoManure</a>
+            </div>
+            <nav class="main-nav">
+                <a href="index.html" class="btn-sm"><i class="fa-solid fa-arrow-left"></i> Back to Shop</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container checkout-page">
+        <h1>Secure Checkout</h1>
+        <div class="checkout-grid">
+            <div class="checkout-form">
+                <form id="payment-form">
+                    <div class="form-section">
+                        <h2><i class="fa-solid fa-truck"></i> Shipping Address</h2>
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" required placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" required placeholder="123 Green St">
+                        </div>
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" required placeholder="Springfield">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2><i class="fa-solid fa-credit-card"></i> Payment Details</h2>
+                        <div class="form-group">
+                            <label>Card Number</label>
+                            <input type="text" placeholder="0000 0000 0000 0000" maxlength="19">
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <div class="form-group" style="flex: 1;">
+                                <label>Expiry</label>
+                                <input type="text" placeholder="MM/YY">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>CVC</label>
+                                <input type="text" placeholder="123">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" style="font-size: 1.1rem;">Pay <span
+                            id="pay-amount">$0.00</span></button>
+                </form>
+            </div>
+
+            <div class="order-summary">
+                <h2>Order Summary</h2>
+                <div id="checkout-items">
+                    <!-- Items go here -->
+                </div>
+                <div class="summary-row summary-total">
+                    <span>Total</span>
+                    <span id="checkout-total">$0.00</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="success-message" class="success-overlay">
+        <div class="success-content">
+            <i class="fa-solid fa-circle-check"></i>
+            <h2>Payment Successful!</h2>
+            <p>Thank you for your order. Your plants will thank you!</p>
+            <br>
+            <a href="index.html" class="btn btn-primary">Return Home</a>
+        </div>
+    </div>
+
+    <script src="db.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedCart = localStorage.getItem('ecoManureCart');
+            const cart = savedCart ? JSON.parse(savedCart) : [];
+            const itemsContainer = document.getElementById('checkout-items');
+            const totalEl = document.getElementById('checkout-total');
+            const payBtnAmount = document.getElementById('pay-amount');
+            const paymentForm = document.getElementById('payment-form');
+
+            let total = 0;
+
+            if (cart.length === 0) {
+                itemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+                paymentForm.querySelector('button').disabled = true;
+            } else {
+                const counts = {};
+                cart.forEach(item => {
+                    if (!counts[item.id]) {
+                        counts[item.id] = { ...item, qty: 0 };
+                    }
+                    counts[item.id].qty += 1;
+                });
+
+                Object.values(counts).forEach(item => {
+                    const itemTotal = item.price * item.qty;
+                    total += itemTotal;
+
+                    const div = document.createElement('div');
+                    div.className = 'summary-row';
+                    div.innerHTML = `
+                        <span>${item.name} x${item.qty}</span>
+                        <span>$${itemTotal.toFixed(2)}</span>
+                    `;
+                    itemsContainer.appendChild(div);
+                });
+            }
+
+            totalEl.textContent = `$${total.toFixed(2)}`;
+            payBtnAmount.textContent = `$${total.toFixed(2)}`;
+
+            // Check for logged in user
+            const user = db.getCurrentUser();
+            const paymentSection = document.querySelectorAll('.form-section')[1];
+
+            if (user) {
+                // Add Payment Method Selection
+                const methodDiv = document.createElement('div');
+                methodDiv.className = 'form-group';
+                methodDiv.innerHTML = `
+                    <label style="margin-bottom: 1rem; display:block;">Payment Method</label>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                            <input type="radio" name="payMethod" value="card" checked> Credit Card
+                        </label>
+                        <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                            <input type="radio" name="payMethod" value="balance"> EcoWallet (Bal: $${user.balance.toFixed(2)})
+                        </label>
+                    </div>
+                `;
+                paymentSection.insertBefore(methodDiv, paymentSection.firstChild);
+
+                // Handle Radio Change
+                // Handle Radio Change
+                const radios = document.querySelectorAll('input[name="payMethod"]');
+                const billingSection = document.querySelector('.form-section:first-of-type');
+                const cardDetailsContainer = paymentSection.querySelector('div:not(.form-group)'); // Container for card inputs
+                // Actually, let's target the fields more specifically
+                const cardInputs = paymentSection.querySelectorAll('input[type="text"]');
+                const billingInputs = billingSection.querySelectorAll('input, select');
+
+                function togglePaymentFields(method) {
+                    if (method === 'balance') {
+                        // Hide Billing Info
+                        billingSection.style.display = 'none';
+                        billingInputs.forEach(i => i.removeAttribute('required'));
+
+                        // Hide Card Details
+                        cardInputs.forEach(i => {
+                            i.closest('.form-group').style.display = 'none';
+                            i.disabled = true;
+                        });
+                        // Hide the flex container for expiry/cvc too
+                        const flexGroup = paymentSection.querySelector('div[style*="display: flex"]');
+                        if (flexGroup) flexGroup.style.display = 'none';
+
+
+                    } else {
+                        // Show Billing Info
+                        billingSection.style.display = 'block';
+                        billingInputs.forEach(i => i.setAttribute('required', 'true'));
+
+                        // Show Card Details
+                        cardInputs.forEach(i => {
+                            i.closest('.form-group').style.display = 'block';
+                            i.disabled = false;
+                        });
+                        const flexGroup = paymentSection.querySelector('div[style*="display: none"]');
+                        if (flexGroup) flexGroup.style.display = 'flex';
+                    }
+                }
+
+                radios.forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        togglePaymentFields(e.target.value);
+                    });
+                });
+
+                // Initialize state
+                togglePaymentFields('card'); // Default to card
+            }
+
+            paymentForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button[type="submit"]');
+                const methods = document.querySelectorAll('input[name="payMethod"]');
+                let useBalance = false;
+
+                methods.forEach(m => {
+                    if (m.checked && m.value === 'balance') useBalance = true;
+                });
+
+                if (useBalance) {
+                    const result = db.deductBalance(total);
+                    if (!result.success) {
+                        alert(result.message);
+                        return;
+                    }
+                }
+
+                const originalText = btn.textContent;
+                btn.textContent = 'Processing...';
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    localStorage.removeItem('ecoManureCart');
+                    document.getElementById('success-message').style.display = 'flex';
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+
+</html>

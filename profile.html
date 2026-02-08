@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | EcoManure Market</title>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 2rem;
+        }
+
+        .profile-header {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 3rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-info h1 {
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .balance-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: var(--radius-sm);
+            text-align: right;
+        }
+
+        .balance-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .top-up-section {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .top-up-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .balance-card {
+                text-align: center;
+                width: 100%;
+            }
+
+            .top-up-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                <a href="index.html">EcoManure</a>
+            </div>
+            <nav class="main-nav">
+                <a href="index.html" class="btn-sm"><i class="fa-solid fa-arrow-left"></i> Back to Shop</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container profile-container">
+        <div class="profile-header">
+            <div class="profile-info">
+                <h1 id="user-greeting">Hello, User</h1>
+                <p id="user-status-badge"
+                    style="background: rgba(255,255,255,0.2); padding: 0.2rem 0.8rem; border-radius: 20px; display: inline-block; margin-bottom: 0.5rem; font-weight: 600;">
+                    Member</p>
+                <p>Member since 2026</p>
+                <button id="logout-btn" class="btn btn-sm btn-outline"
+                    style="color: white; border-color: white; margin-top: 1rem;">Logout</button>
+            </div>
+            <div class="balance-card">
+                <p>Current Balance</p>
+                <div class="balance-amount" id="current-balance">$0.00</div>
+            </div>
+        </div>
+
+        <div class="top-up-section">
+            <h2>Top Up Wallet</h2>
+            <p>Add funds to your EcoCredits account specifically for our store.</p>
+
+            <div class="top-up-grid">
+                <div>
+                    <label style="display:block; margin-bottom:0.5rem; font-weight:500;">Amount ($)</label>
+                    <input type="number" id="top-up-amount" value="50" min="10" step="10"
+                        style="width:100%; padding:0.8rem; border:1px solid #ddd; border-radius:4px; font-size:1.1rem;">
+                </div>
+                <div>
+                    <label style="display:block; margin-bottom:0.5rem; font-weight:500;">Card Details
+                        (Simulated)</label>
+                    <input type="text" value="**** **** **** 4242" disabled
+                        style="width:100%; padding:0.8rem; border:1px solid #ddd; border-radius:4px; background:#f5f5f5; color:#777;">
+                </div>
+            </div>
+            <button id="top-up-btn" class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;">Add Funds</button>
+            <p id="top-up-msg" style="margin-top: 1rem; color: green; display: none; text-align: center;">Funds added
+                successfully!</p>
+        </div>
+
+        <div class="top-up-section" style="margin-top: 2rem;">
+            <h2>Send Gift Transfer</h2>
+            <p>Send EcoCredits to another user instantly.</p>
+
+            <div class="top-up-grid">
+                <div>
+                    <label style="display:block; margin-bottom:0.5rem; font-weight:500;">Recipient Username</label>
+                    <input type="text" id="transfer-recipient" placeholder="username"
+                        style="width:100%; padding:0.8rem; border:1px solid #ddd; border-radius:4px; font-size:1.1rem;">
+                </div>
+                <div>
+                    <label style="display:block; margin-bottom:0.5rem; font-weight:500;">Amount ($)</label>
+                    <input type="number" id="transfer-amount" min="1" step="1"
+                        style="width:100%; padding:0.8rem; border:1px solid #ddd; border-radius:4px; font-size:1.1rem;">
+                </div>
+            </div>
+            <button id="transfer-btn" class="btn btn-outline"
+                style="margin-top: 1.5rem; width: 100%; border-color: var(--primary-color); color: var(--primary-color);">Send
+                Funds</button>
+            <p id="transfer-msg" style="margin-top: 1rem; color: green; display: none; text-align: center;"></p>
+            <p id="transfer-error" style="margin-top: 1rem; color: #d32f2f; display: none; text-align: center;"></p>
+        </div>
+    </main>
+
+    <script src="db.js"></script>
+    <script>
+        // Check auth
+        const user = db.getCurrentUser();
+        if (!user) {
+            window.location.href = 'login.html';
+        }
+
+        // Render profile
+        document.getElementById('user-greeting').textContent = `Hello, ${user.username}`;
+        document.getElementById('user-status-badge').textContent = db.getStatus(user.balance);
+
+        function updateDisplay() {
+            const freshUser = db.getCurrentUser();
+            document.getElementById('current-balance').textContent = `$${freshUser.balance.toFixed(2)}`;
+            document.getElementById('user-status-badge').textContent = db.getStatus(freshUser.balance);
+        }
+        updateDisplay();
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            db.logout();
+            window.location.href = 'index.html';
+        });
+
+        // Top Up
+        document.getElementById('top-up-btn').addEventListener('click', () => {
+            const amount = document.getElementById('top-up-amount').value;
+            if (amount > 0) {
+                const result = db.topUp(amount);
+                if (result.success) {
+                    updateDisplay();
+                    const msg = document.getElementById('top-up-msg');
+                    msg.style.display = 'block';
+                    setTimeout(() => {
+                        msg.style.display = 'none';
+                    }, 2000);
+                }
+            }
+        });
+
+        // Transfer
+        document.getElementById('transfer-btn').addEventListener('click', () => {
+            const recipient = document.getElementById('transfer-recipient').value;
+            const amount = document.getElementById('transfer-amount').value;
+            const msgEl = document.getElementById('transfer-msg');
+            const errEl = document.getElementById('transfer-error');
+
+            msgEl.style.display = 'none';
+            errEl.style.display = 'none';
+
+            if (!recipient || amount <= 0) {
+                errEl.textContent = "Please enter valid recipient and amount";
+                errEl.style.display = 'block';
+                return;
+            }
+
+            const result = db.transferFunds(recipient, amount);
+
+            if (result.success) {
+                updateDisplay();
+                msgEl.textContent = `Successfully sent $${amount} to ${recipient}`;
+                msgEl.style.display = 'block';
+                document.getElementById('transfer-recipient').value = '';
+                document.getElementById('transfer-amount').value = '';
+            } else {
+                errEl.textContent = result.message;
+                errEl.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>
